@@ -705,28 +705,36 @@
     const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:0.08});
     document.querySelectorAll('.reveal').forEach(r=>obs.observe(r));
 
-    // Form — replace URL with your Formspree endpoint: https://formspree.io/f/XXXXXXXX
+    // Form — Formspree
     async function handleSubmit(e){
       e.preventDefault();
       const btn=document.getElementById('submit-btn');
       const msg=document.getElementById('form-msg');
       btn.textContent='Transmitting...';btn.disabled=true;
 
-      // Uncomment below and add your Formspree URL to make the form live:
-      // const res = await fetch('https://formspree.io/f/XXXXXXXX', {
-      //   method:'POST', headers:{'Content-Type':'application/json'},
-      //   body: JSON.stringify({
-      //     name: document.getElementById('name').value,
-      //     email: document.getElementById('email').value,
-      //     subject: document.getElementById('subject').value,
-      //     message: document.getElementById('message').value
-      //   })
-      // });
-
-      await new Promise(r=>setTimeout(r,1200));
-      msg.style.display='block';msg.style.color='var(--cyan)';
-      msg.textContent="> Transmission received. I'll be in touch within 24 hours.";
-      btn.textContent='Sent ✓';
+      try {
+        const res = await fetch('https://formspree.io/f/mvzvokoo', {
+          method:'POST', headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({
+            name: document.getElementById('name').value,
+            email: document.getElementById('email').value,
+            subject: document.getElementById('subject').value,
+            message: document.getElementById('message').value
+          })
+        });
+        if(res.ok){
+          msg.style.display='block';msg.style.color='var(--cyan)';
+          msg.textContent="> Transmission received. I'll be in touch within 24 hours.";
+          btn.textContent='Sent ✓';
+          e.target.reset();
+        } else {
+          throw new Error('Failed');
+        }
+      } catch(err){
+        msg.style.display='block';msg.style.color='var(--pink)';
+        msg.textContent='> Something went wrong. Try reaching me on LinkedIn.';
+        btn.textContent='Retry';btn.disabled=false;
+      }
     }
   </script>
 </body>
