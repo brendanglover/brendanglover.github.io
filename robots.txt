@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://brendanglover.github.io/sitemap.xml
